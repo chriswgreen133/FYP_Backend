@@ -2,7 +2,6 @@
 const mongoose = require('mongoose');
 
 const reviewSchema = new mongoose.Schema({
-    schoolID: { type: String, required: true },
     userID: { type: String, required: true },
     username: { type: String, required: true },
     userProfilePic: { type: String, required: false },
@@ -10,11 +9,8 @@ const reviewSchema = new mongoose.Schema({
     reviewText: { type: String, required: true },
     rating: { type: Number, required:true },
     reply: [{
-        username: { type: String, required: false },
-        userID: { type: String, required: false },
-        text: { type: String, required: true },
-        profilePic: { type: String, required: false }
-    }]
+        schoolIcon: { type: String, required: false },
+        text: { type: String, required: true }}]
 })
 
-module.exports = mongoose.model('review', reviewSchema)
+module.exports = mongoose.model('appReview', reviewSchema)

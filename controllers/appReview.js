@@ -1,11 +1,11 @@
 const mongoose = require('mongoose');
 
-const Review = require('../models/schoolhubReview');
+const Review = require('../models/appReview');
 const HttpError = require('../models/http-error');
 const { json } = require('body-parser');
 
 mongoose.connect(
-    'mongodb+srv://saad:saad@schoolhub.zmtqr.mongodb.net/schoolhubReviews?retryWrites=true&w=majority'
+    'mongodb+srv://saad:saad@schoolhub.zmtqr.mongodb.net/appReview?retryWrites=true&w=majority'
 ).then(() => {
     console.log("DB connected")
 }).catch(() => {
