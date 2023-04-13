@@ -1,7 +1,6 @@
 
 const express = require('express');
 const dashboard = require('../controllers/dashboard_mongoose.js')
-const file_upload = require('../middleware/file_upload')
 
 const router = express.Router();
 

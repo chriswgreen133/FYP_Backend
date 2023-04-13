@@ -6,7 +6,7 @@ const HttpError = require('../models/http-error');
 const { json } = require('body-parser');
 
 mongoose.connect(
-    'mongodb+srv://saad:saad@schoolhub.zmtqr.mongodb.net/reviews?retryWrites=true&w=majority'
+    'mongodb+srv://chriswgreen11:chriswgreen133@fyp.4yejyi1.mongodb.net/reviews?retryWrites=true&w=majority'
 ).then(() => {
     console.log("DB connected")
 }).catch(() => {

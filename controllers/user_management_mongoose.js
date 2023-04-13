@@ -8,7 +8,7 @@ const Users = require('../models/users');
 const HttpError = require('../models/http-error');
 
 mongoose.connect(
-    'mongodb+srv://saad:saad@schoolhub.zmtqr.mongodb.net/users?retryWrites=true&w=majority'
+    'mongodb+srv://chriswgreen11:chriswgreen133@fyp.4yejyi1.mongodb.net/users?retryWrites=true&w=majority'
 ).then(() => {
     console.log("DB connected")
 }).catch(() => {
@@ -17,7 +17,6 @@ mongoose.connect(
 
 const createUser = async (req, res, next) => {
     const createdUser = new Users({
-        type: req.body.type,
         email: req.body.email,
         username: req.body.username,
         phoneNumber: req.body.phoneNumber,
@@ -101,13 +100,6 @@ const userLogin = async (req, res, next) => {
     } catch (err) {
         const error = new HttpError('Email error occured', 500);
         res.status(500).send()
-        return next(error)
-    }
-
-    //if (!existingUser || existingUser.password !== password || existingUser.type !== type) {
-    if (!existingUser || existingUser.type !== type) {
-        const error = new HttpError('Wrong credentials', 401)
-        res.status(401).send()
         return next(error)
     }
 
