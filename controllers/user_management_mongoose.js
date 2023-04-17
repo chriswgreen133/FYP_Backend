@@ -339,7 +339,7 @@ const superAdminLogin = async (req, res, next) => {
 const searchUser = async (req, res, next) => {
 
     console.log("inside SearchUser")
-    const type = req.body.type;
+    // const type = req.body.type;
 
     const name = req.params.sName;
     console.log(name)
@@ -363,39 +363,19 @@ const searchUser = async (req, res, next) => {
         console.log("Search Result")
         //console.log(userArr)
 
-        users = usersArr.filter((item) => {
-            if (item.type == 'Teacher' || item.type == 'Student') {
-                return item
-            }
-        })
+        // users = usersArr.filter((item) => {
+        //     if (item.type == 'Teacher' || item.type == 'Student') {
+        //         return item
+        //     }
+        // })
+
+        users = usersArr
     } catch (err) {
         console.log("Error")
         console.log(err)
     }
 
-
-    //------------------------Type------------------------------------
-    if (type != undefined && type != '') {
-        let filteredUsers = []
-        if (type == 'Student') {
-            filteredUsers = users.filter((item) => {
-                return item.type == 'Student'
-            })
-
-            return res.status(200).send(JSON.stringify(filteredUsers))
-        } else if (type == 'Teacher') {
-            filteredUsers = users.filter((item) => {
-                return item.type == 'Teacher'
-            })
-
-            return res.status(200).send(JSON.stringify(filteredUsers))
-        } else {
-            console.log("Type is wrong!")
-            return res.status(500).send(JSON.stringify({ message: "Wrong type entered" }))
-        }
-    } else {
-        return res.status(200).send(JSON.stringify(users))
-    }
+    return res.status(200).send(JSON.stringify(users))
 }
 
 const updateFollowing = async (req, res, next) => {
