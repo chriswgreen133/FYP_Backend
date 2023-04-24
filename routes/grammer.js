@@ -3,9 +3,9 @@ const grammer = require('../controllers/grammer.js')
 
 const router = express.Router();
 
-router.get('/transcribe', grammer.transcribe)
+router.post('/transcribe', grammer.transcribe)
 
-router.get('/analysis', grammer.analysis)
+router.post('/analysis', grammer.analysis)
 
 //router.post('/post', file_upload.single('image'), dashboard.createPost)//, dashboard.createPost)
 // router.post('/post', grammer.createPost)//, dashboard.createPost)

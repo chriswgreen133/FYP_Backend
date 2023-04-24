@@ -11,7 +11,7 @@ mongoose.connect(
 })
 
 const transcribe = async (req, res, next) => {
-    audio_file = req.body.audio
+    audio_file = req.body
     console.log(audio_file)
 
     try {
