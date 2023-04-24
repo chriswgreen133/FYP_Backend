@@ -7,6 +7,8 @@ const userManagementRoutes = require('./routes/user_management.js')
 const dashboardRoutes = require('./routes/dashboard.js')
 const superAdminRoutes = require("./routes/superAdmin")
 const chatRequestRoutes = require("./routes/chats")
+const feedbackRequestRoutes = require("./routes/appReview")
+const grammerRequestRoutes = require("./routes/grammer")
 
 const app = express();
 
@@ -30,6 +32,10 @@ app.use('/dashboard', dashboardRoutes)
 app.use('/superAdmin', superAdminRoutes)
 
 app.use('/chat', chatRequestRoutes)
+
+app.use('/mainReview', feedbackRequestRoutes)
+
+app.use('/grammer', grammerRequestRoutes)
 
 //When all middlewares start with same routes then we do this, only the routes starting
 //with the admin will enter this method
