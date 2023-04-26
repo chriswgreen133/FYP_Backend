@@ -1,6 +1,9 @@
 const mongoose = require('mongoose');
 const HttpError = require('../models/http-error');
-const { json } = require('body-parser');
+const axios = require('axios');
+var FormData = require('form-data');
+const fs = require("fs")
+const { Configuration, OpenAIApi } = require("openai");
 
 mongoose.connect(
     'mongodb+srv://chriswgreen11:chriswgreen133@fyp.4yejyi1.mongodb.net/reviews?retryWrites=true&w=majority'
@@ -10,64 +13,99 @@ mongoose.connect(
     console.log('Error occured, DB connection failed ')
 })
 
-const transcribe = async (req, res, next) => {
-    audio_file = req.body
-    console.log(audio_file)
+const apikey = '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'
+
+async function transcribeAudio(apiKey, audioFile) {
+    const url = 'https://api.openai.com/v1/audio/transcriptions';
+
+    const file_path = audioFile.path
+
+    const formData = new FormData();
+    formData.append('model', 'whisper-1');
+    formData.append('file', fs.createReadStream(file_path));
 
     try {
-        // transcribe
-
-    } catch (err) {
-        const error = new HttpError(
-            'Something went wrong, could not find school.',
-            500
-        );
-        return next(error);
+        axios.post(url, formData, {
+        headers: {
+            'Authorization': `Bearer ${apiKey}`,
+            ...formData.getHeaders()
+        }
+        }).then(response => {
+            console.log('========= response =========')
+            console.log(response.data.text)
+            return res.status(200).json(response.data.text);
+        }).catch(error => {
+            console.log(error)
+            return res.status(200).json("Server Error");
+        })
+    } catch (error) {
+        console.error(error);
+        return res.status(200).json("Server Error");
     }
+}
 
-    res.status(200).json("Success");
+const transcribe = async (req, res, next) => {
+    const file = req.file;
+    console.log('audio_file req.file')
+    console.log(file);
+
+    const url = 'https://api.openai.com/v1/audio/transcriptions';
+
+    const file_path = file.path
+
+    const formData = new FormData();
+    formData.append('model', 'whisper-1');
+    formData.append('file', fs.createReadStream(file_path));
+
+    try {
+        axios.post(url, formData, {
+        headers: {
+            'Authorization': `Bearer ${apikey}`,
+            ...formData.getHeaders()
+            // 'Content-Type': `multipart/form-data; boundary=${formData._boundary}`
+        }
+        }).then(response => {
+            console.log('========= response =========')
+            console.log(response.data.text)
+            return res.status(200).json(response.data.text);
+        }).catch(error => {
+            console.log(error)
+            return res.status(200).json("Server Error");
+        })
+
+    } catch (error) {
+        console.error(error);
+    }
 }
 
 const analysis = async (req, res, next) => {
-    let newReply = req.body;
-    console.log("inside addreply")
-    const reviewID = req.params.rid;
-    console.log(newReply)
-    console.log(reviewID)
+    const text = req.body.response;
+    
+    console.log('========= text ==========')
+    console.log(text)
 
-    let review;
-    try {
-        review = await Review.findById(reviewID);
-    } catch (err) {
-        const error = new HttpError(
-            'Something went wrong, could not update post.',
-            500
-        );
-        return next(error);
-    }
+    const configuration = new Configuration({
+        apiKey: apikey,
+    });
+    const openai = new OpenAIApi(configuration);
+    
+    openai.createChatCompletion({
+        model: "gpt-3.5-turbo",
+        messages: [
+            {"role": "system", "content": "You are a grammer analysis assistant. i will provide you with english passages and you will have to correct its grammer and also explain how to improve the mistakes made."},
+            {"role": "user", "content": text}
+        ],
+    }).then(response => {
+        console.log('========= response =========')
+        console.log(response.data.choices[0].message.content)
+        return res.status(200).json(response.data.choices[0].message.content);
+    }).catch(error => {
+        console.log(error)
+        return res.status(200).json("Server Error");
+    })
 
-    //let allComments = review.comments;
-
-    // && newReply.text != undefined && newReply.username != undefined
-    // && newReply.userID != undefined
-    if (newReply != null || newReply != undefined) {
-        review.reply.push(newReply)
-        console.log(newReply)
-    }
-
-    try {
-        await review.save();
-    } catch (err) {
-        const error = new HttpError(
-            'Something went wrong, could not update Review.',
-            500
-        );
-        console.log(err)
-        return next(error);
-    }
-
-    res.status(200).json(review);
-
+    // console.log('========== response ===========')
+    // console.log(response.data.choices[0].message);
 }
 
 exports.transcribe = transcribe;

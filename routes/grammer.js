@@ -1,9 +1,21 @@
 const express = require('express');
 const grammer = require('../controllers/grammer.js')
-
+const multer = require('multer');
 const router = express.Router();
 
-router.post('/transcribe', grammer.transcribe)
+const storage = multer.diskStorage({
+    destination: function (req, file, cb) {
+      cb(null, 'uploads/')
+    },
+    filename: function (req, file, cb) {
+      cb(null, file.originalname)
+    }
+  })
+  
+  const upload = multer({ storage: storage });
+  
+
+router.post('/transcribe', upload.single('audioFile'), grammer.transcribe)
 
 router.post('/analysis', grammer.analysis)
 
