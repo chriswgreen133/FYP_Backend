@@ -13,7 +13,7 @@ mongoose.connect(
     console.log('Error occured, DB connection failed ')
 })
 
-const apikey = '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'
+const apikey = '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'
 
 async function transcribeAudio(apiKey, audioFile) {
     const url = 'https://api.openai.com/v1/audio/transcriptions';
